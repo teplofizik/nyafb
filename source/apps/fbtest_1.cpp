@@ -19,6 +19,7 @@ int main(int argc, const char * argv[])
 										  framebuffer->get_bpp());
 			
 			framebuffer->fill(0, 0, 100, 0);
+			framebuffer->rect(500, 200, 30, 30, 255, 255, 0, 0);
 			
 			auto image = std::make_shared<nyafb::images::c_image_png>("test.png");
 			framebuffer->draw_image(10, 10, image);

@@ -45,6 +45,12 @@ namespace nyafb {
 		// Line length in bytes
 		uint16_t line_length;
 		
+		// Get cropped dimension size of object
+		//      v: x or y
+		//   size: width or height
+		// fbsize: framebuffer width or height
+		uint16_t get_cropped_size(uint16_t v, uint16_t size, uint16_t fbsize);
+		
 	public:
 		// Constructor
 		// path: path to fb device
@@ -94,6 +100,25 @@ namespace nyafb {
 		// Fill by color
 		// color: color 0xAABBGGRR
 		void fill(uint32_t color);
+
+		// Fill rect by color
+		// x: x offset
+		// y: y offset
+		// w: rect width
+		// y: rect height
+		// r: red component
+		// g: green component
+		// b: blue component
+		// a: alpha (0 - opaque, 255 - transparent)
+		void rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+
+		// Fill rect by color
+		// x: x offset
+		// y: y offset
+		// w: rect width
+		// y: rect height
+		// color: color 0xAABBGGRR
+		void rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color);
 
 		// Draw image
 		//     x: x offset

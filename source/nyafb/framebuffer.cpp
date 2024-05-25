@@ -72,6 +72,20 @@ c_framebuffer::~c_framebuffer()
 	}
 }
 
+// Get cropped dimension size of object
+//      v: x or y
+//   size: width or height
+// fbsize: framebuffer width or height
+uint16_t c_framebuffer::get_cropped_size(uint16_t v, uint16_t size, uint16_t fbsize)
+{
+	uint16_t last_v = v + size - 1;
+	
+	if(size >= fbsize)
+		size -= (size - fbsize);
+	
+	return size;
+}
+		
 // Set color
 // x: x offset
 // y: y offset
@@ -175,6 +189,45 @@ void c_framebuffer::fill(uint32_t color)
 	fill(red, green, blue, alpha);
 }
 
+// Fill rect by color
+// x: x offset
+// y: y offset
+// w: rect width
+// y: rect height
+// r: red component
+// g: green component
+// b: blue component
+// a: alpha (0 - opaque, 255 - transparent)
+void c_framebuffer::rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+	uint16_t rwidth = get_cropped_size(x, w, width);
+	uint16_t rheight = get_cropped_size(y, h, height);
+	
+	for (uint16_t ry = 0; ry < rheight; ry++)
+	{
+		for (uint16_t rx = 0; rx < rwidth; rx++)
+		{
+			set_pixel(x + rx, y + ry, r, g, b, a);
+		}
+	}
+}
+
+// Fill rect by color
+// x: x offset
+// y: y offset
+// w: rect width
+// y: rect height
+// color: color 0xAABBGGRR
+void c_framebuffer::rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint32_t color)
+{
+	uint8_t alpha = (color >> 24) & 0xFF;
+	uint8_t red   = (color >> 0)  & 0xFF;
+	uint8_t green = (color >> 8)  & 0xFF;
+	uint8_t blue  = (color >> 16) & 0xFF;
+	
+	rect(x, y, w, h, red, green, blue, alpha);
+}
+
 // Draw image
 //     x: x offset
 //     y: y offset
@@ -184,16 +237,8 @@ void c_framebuffer::draw_image(uint16_t x, uint16_t y, std::shared_ptr<c_image> 
 	if((image == nullptr) || !image->is_available() || (x >= width) || (y >= height))
 		return;
 	
-	uint16_t iwidth = image->get_width();
-	uint16_t iheight = image->get_height();
-	
-	uint16_t last_x = x + iwidth - 1;
-	uint16_t last_y = y + iheight - 1;
-	
-	if(iwidth >= width)
-		iwidth -= (iwidth - width);
-	if(iheight >= height)
-		iheight -= (iheight - height);
+	uint16_t iwidth = get_cropped_size(x, image->get_width(), width);
+	uint16_t iheight = get_cropped_size(y, image->get_height(), height);
 	
 	for(int ix = 0; ix < iwidth; ix++)
 	{

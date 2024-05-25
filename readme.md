@@ -1,4 +1,4 @@
-# Linux framebuffer library
+# NyaFb. Linux framebuffer library
 
 ## Setup
 Dependency:

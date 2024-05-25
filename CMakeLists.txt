@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.5) # Проверка версии CMake.
-project(fbtest)
+cmake_minimum_required(VERSION 3.5)
+project(nyafb_library)
 
 set (CMAKE_CXX_STANDARD 17)
 
